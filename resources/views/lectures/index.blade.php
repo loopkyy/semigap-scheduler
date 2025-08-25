@@ -1,45 +1,31 @@
 @extends('layouts.app')
 
+@section('title', 'Jadwal Kuliah')
+
 @section('content')
-<div class="container">
-    <h1 class="mb-4">Daftar Mata Kuliah</h1>
+<h1 class="mb-4">📖 Jadwal Kuliah</h1>
+<a href="#" class="btn btn-success mb-3 shadow-sm">+ Tambah Jadwal Kuliah</a>
 
-    <a href="{{ route('lectures.create') }}" class="btn btn-primary mb-3">+ Tambah Mata Kuliah</a>
-
-    @if($lectures->count())
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nama</th>
-                    <th>Dosen</th>
-                    <th>Hari</th>
-                    <th>Jam</th>
-                    <th>Ruangan</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($lectures as $lecture)
-                    <tr>
-                        <td>{{ $lecture->name }}</td>
-                        <td>{{ $lecture->lecturer }}</td>
-                        <td>{{ $lecture->day }}</td>
-                        <td>{{ $lecture->start_time }} - {{ $lecture->end_time }}</td>
-                        <td>{{ $lecture->room }}</td>
-                        <td>
-                            <a href="{{ route('lectures.edit', $lecture->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ route('lectures.destroy', $lecture->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus?')">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <p>Belum ada data mata kuliah.</p>
-    @endif
+<div class="card shadow-sm p-3">
+    <table class="table table-hover align-middle">
+        <thead class="table-primary">
+            <tr>
+                <th>Mata Kuliah</th>
+                <th>Hari</th>
+                <th>Jam</th>
+                <th>Ruangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($lectures as $lecture)
+            <tr>
+                <td>{{ $lecture['name'] }}</td>
+                <td>{{ $lecture['day'] }}</td>
+                <td>{{ $lecture['start_time'] }} - {{ $lecture['end_time'] }}</td>
+                <td>{{ $lecture['room'] }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 @endsection
