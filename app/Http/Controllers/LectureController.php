@@ -6,59 +6,13 @@ use Illuminate\Http\Request;
 
 class LectureController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-    }
+        $lectures = [
+            ['name' => 'Pemrograman Web', 'day' => 'Senin', 'start_time' => '08:00', 'end_time' => '10:00', 'room' => 'Lab 1'],
+            ['name' => 'Algoritma & Struktur Data', 'day' => 'Selasa', 'start_time' => '10:00', 'end_time' => '12:00', 'room' => 'Lab 2'],
+        ];
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return view('lectures.index', compact('lectures'));
     }
 }
