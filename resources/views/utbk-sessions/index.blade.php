@@ -3,77 +3,93 @@
 @section('content')
 <div class="container mt-4">
 
-    <!-- Header & Tambah Jadwal -->
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
-        <h2><i class="bi bi-journal-text"></i> Jadwal UTBK</h2>
-        <a href="{{ route('utbk_sessions.create') }}" class="btn btn-success shadow-sm mt-2 mt-md-0">
-            <i class="bi bi-plus-lg"></i> Tambah Jadwal
+        <h2 class="fw-bold text-primary">
+            <i class="bi bi-journal-text me-2"></i> Jadwal UTBK
+        </h2>
+        <a href="{{ route('utbk-sessions.create') }}" class="btn btn-success shadow-sm mt-2 mt-md-0">
+            <i class="bi bi-plus-lg"></i> Tambah Sesi
         </a>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <!-- Tabs -->
-    <ul class="nav nav-tabs" id="utbkTabs" role="tablist">
+    <ul class="nav nav-tabs mb-3" id="utbkTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="aktif-tab" data-bs-toggle="tab" data-bs-target="#aktif" type="button" role="tab">
-                Aktif
-            </button>
+            <button class="nav-link active" id="aktif-tab" data-bs-toggle="tab" data-bs-target="#aktif" type="button" role="tab">Aktif</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="lewat-tab" data-bs-toggle="tab" data-bs-target="#lewat" type="button" role="tab">
-                Lewat
-            </button>
+            <button class="nav-link" id="lewat-tab" data-bs-toggle="tab" data-bs-target="#lewat" type="button" role="tab">Lewat</button>
         </li>
     </ul>
 
-    <div class="tab-content mt-3">
+    <div class="tab-content" id="utbkTabContent">
         <!-- Tab Aktif -->
         <div class="tab-pane fade show active" id="aktif" role="tabpanel">
-            <div class="row g-3">
-                @php
-                    $today = \Carbon\Carbon::today();
-                    $aktifSessions = $sessions->filter(fn($s) => \Carbon\Carbon::parse($s->date)->gte($today));
-                @endphp
-                @forelse($aktifSessions as $session)
-                    @include('utbk_sessions._card', ['session' => $session])
-                @empty
-                    <div class="col-12 text-center text-muted">
-                        <i class="bi bi-inbox"></i> Belum ada jadwal aktif.
-                    </div>
-                @endforelse
-            </div>
+            @if($sessionsAktif->isEmpty())
+                <div class="alert alert-info">Belum ada sesi aktif.</div>
+            @else
+                <div class="row">
+                    @foreach($sessionsAktif as $session)
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm border-0 h-100 hover-card">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">{{ $session->subject }}</h5>
+                                    <p class="text-muted mb-1">
+                                        <i class="bi bi-calendar-date me-2"></i>
+                                        {{ \Carbon\Carbon::parse($session->date)->format('d M Y') }}
+                                    </p>
+                                    <p class="text-muted mb-1">
+                                        <i class="bi bi-clock me-2"></i>
+                                        {{ date('H:i', strtotime($session->start_time)) }} - {{ date('H:i', strtotime($session->end_time)) }}
+                                    </p>
+                                    @if($session->notes)
+                                        <p class="text-muted"><i class="bi bi-card-text me-2"></i>{{ $session->notes }}</p>
+                                    @endif
+
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <a href="{{ route('utbk-sessions.edit', $session->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Edit</a>
+                                        <form action="{{ route('utbk-sessions.destroy', $session->id) }}" method="POST" onsubmit="return confirm('Yakin hapus sesi ini?')">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Hapus</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <!-- Tab Lewat -->
         <div class="tab-pane fade" id="lewat" role="tabpanel">
-            <div class="row g-3">
-                @php
-                    $lewatSessions = $sessions->filter(fn($s) => \Carbon\Carbon::parse($s->date)->lt($today));
-                @endphp
-                @forelse($lewatSessions as $session)
-                    @include('utbk_sessions._card', ['session' => $session])
-                @empty
-                    <div class="col-12 text-center text-muted">
-                        <i class="bi bi-inbox"></i> Tidak ada jadwal lewat.
-                    </div>
-                @endforelse
-            </div>
+            @if($sessionsLewat->isEmpty())
+                <div class="alert alert-secondary">Belum ada sesi yang lewat.</div>
+            @else
+                <div class="row">
+                    @foreach($sessionsLewat as $session)
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm border-0 h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">{{ $session->subject }}</h5>
+                                    <p class="text-muted mb-1">
+                                        <i class="bi bi-calendar-date me-2"></i>
+                                        {{ \Carbon\Carbon::parse($session->date)->format('d M Y') }}
+                                    </p>
+                                    <p class="text-muted mb-1">
+                                        <i class="bi bi-clock me-2"></i>
+                                        {{ date('H:i', strtotime($session->start_time)) }} - {{ date('H:i', strtotime($session->end_time)) }}
+                                    </p>
+                                    @if($session->notes)
+                                        <p class="text-muted"><i class="bi bi-card-text me-2"></i>{{ $session->notes }}</p>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
+
 </div>
 @endsection
-
-@push('styles')
-<style>
-.card-hover { 
-    transition: transform 0.2s, box-shadow 0.2s; 
-}
-.card-hover:hover { 
-    transform: translateY(-5px); 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
-}
-</style>
-@endpush

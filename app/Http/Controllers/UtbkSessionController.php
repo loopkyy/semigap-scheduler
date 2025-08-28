@@ -8,10 +8,28 @@ use Illuminate\Http\Request;
 class UtbkSessionController extends Controller
 {
     public function index()
-    {
-        $sessions = UtbkSession::orderBy('date')->orderBy('start_time')->get();
-        return view('utbk-sessions.index', compact('sessions'));
-    }
+{
+    $today = now()->toDateString();
+    $nowTime = now()->format('H:i:s');
+
+    $sessionsAktif = UtbkSession::where(function($q) use ($today, $nowTime) {
+        $q->where('date', '>', $today)
+          ->orWhere(function($sub) use ($today, $nowTime) {
+              $sub->where('date', $today)
+                  ->where('end_time', '>=', $nowTime);
+          });
+    })->orderBy('date')->get();
+
+    $sessionsLewat = UtbkSession::where(function($q) use ($today, $nowTime) {
+        $q->where('date', '<', $today)
+          ->orWhere(function($sub) use ($today, $nowTime) {
+              $sub->where('date', $today)
+                  ->where('end_time', '<', $nowTime);
+          });
+    })->orderBy('date', 'desc')->get();
+
+    return view('utbk-sessions.index', compact('sessionsAktif', 'sessionsLewat'));
+}
 
     public function create()
     {
