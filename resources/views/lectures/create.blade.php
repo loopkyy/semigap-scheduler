@@ -1,58 +1,44 @@
 @extends('layouts.app')
 
-@section('title', 'Tambah Jadwal Kuliah')
-
 @section('content')
 <div class="container mt-4">
-    <h2 class="mb-4">➕ Tambah Jadwal Kuliah</h2>
+    <h2>➕ Tambah Sesi UTBK</h2>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    <form action="{{ route('utbk.store') }}" method="POST" class="mt-4">
+        @csrf
 
-    <div class="card shadow-sm p-4">
-        <form action="{{ route('lectures.store') }}" method="POST">
-            @csrf
-            <div class="mb-3">
-                <label for="name" class="form-label">Mata Kuliah</label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Contoh: Algoritma" required>
-            </div>
+        <!-- Mata Pelajaran -->
+        <div class="mb-3">
+            <label class="form-label">Mata Pelajaran</label>
+            <input type="text" name="subject" class="form-control" required value="{{ old('subject') }}">
+        </div>
 
-            <div class="mb-3">
-                <label for="lecturer" class="form-label">Dosen</label>
-                <input type="text" id="lecturer" name="lecturer" class="form-control" placeholder="Nama dosen" required>
-            </div>
+        <!-- Tanggal -->
+        <div class="mb-3">
+            <label class="form-label">Tanggal</label>
+            <input type="date" name="date" class="form-control" required value="{{ old('date') }}">
+        </div>
 
-            <div class="mb-3">
-                <label for="date" class="form-label">Tanggal</label>
-                <input type="date" id="date" name="date" class="form-control" required>
-            </div>
+        <!-- Jam Mulai -->
+        <div class="mb-3">
+            <label class="form-label">Jam Mulai</label>
+            <input type="time" name="start_time" class="form-control" required value="{{ old('start_time') }}">
+        </div>
 
-            <div class="row mb-3">
-                <div class="col">
-                    <label for="start_time" class="form-label">Jam Mulai</label>
-                    <input type="time" id="start_time" name="start_time" class="form-control" required>
-                </div>
-                <div class="col">
-                    <label for="end_time" class="form-label">Jam Selesai</label>
-                    <input type="time" id="end_time" name="end_time" class="form-control" required>
-                </div>
-            </div>
+        <!-- Jam Selesai -->
+        <div class="mb-3">
+            <label class="form-label">Jam Selesai</label>
+            <input type="time" name="end_time" class="form-control" required value="{{ old('end_time') }}">
+        </div>
 
-            <div class="mb-4">
-                <label for="room" class="form-label">Ruangan</label>
-                <input type="text" id="room" name="room" class="form-control" placeholder="Contoh: Lab 1" required>
-            </div>
+        <!-- Catatan -->
+        <div class="mb-3">
+            <label class="form-label">Catatan</label>
+            <textarea name="notes" class="form-control">{{ old('notes') }}</textarea>
+        </div>
 
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-success shadow-sm">
-                    <i class="bi bi-check-lg"></i> Simpan
-                </button>
-                <a href="{{ route('lectures.index') }}" class="btn btn-secondary shadow-sm">
-                    <i class="bi bi-x-lg"></i> Batal
-                </a>
-            </div>
-        </form>
-    </div>
+        <button type="submit" class="btn btn-success">Simpan</button>
+        <a href="{{ route('utbk.index') }}" class="btn btn-secondary">Batal</a>
+    </form>
 </div>
 @endsection

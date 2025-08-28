@@ -2,63 +2,60 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UtbkSession;
 use Illuminate\Http\Request;
 
 class UtbkSessionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $sessions = UtbkSession::orderBy('date')->orderBy('start_time')->get();
+        return view('utbk-sessions.index', compact('sessions'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('utbk-sessions.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'date' => 'required|date',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'notes' => 'nullable|string',
+        ]);
+
+        UtbkSession::create($request->all());
+
+        return redirect()->route('utbk-sessions.index')->with('success', 'UTBK session added!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(UtbkSession $utbk_session)
     {
-        //
+        return view('utbk-sessions.edit', compact('utbk_session'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, UtbkSession $utbk_session)
     {
-        //
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'date' => 'required|date',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'notes' => 'nullable|string',
+        ]);
+
+        $utbk_session->update($request->all());
+
+        return redirect()->route('utbk-sessions.index')->with('success', 'UTBK session updated!');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(UtbkSession $utbk_session)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $utbk_session->delete();
+        return redirect()->route('utbk-sessions.index')->with('success', 'UTBK session deleted!');
     }
 }
