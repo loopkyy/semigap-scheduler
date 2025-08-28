@@ -19,11 +19,27 @@
         .navbar {
             border-bottom-left-radius: 12px;
             border-bottom-right-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+        }
+
+        /* Navbar links hover */
+        .nav-link:hover {
+            text-decoration: underline;
         }
 
         /* Cards */
         .card {
             border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
         /* Headings */
@@ -41,9 +57,9 @@
             padding-bottom: 60px;
         }
 
-        /* Navbar links hover */
-        .nav-link:hover {
-            text-decoration: underline;
+        /* Icon buttons spacing */
+        .btn i {
+            margin-right: 4px;
         }
 
         /* Responsive adjustments */
@@ -57,23 +73,34 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">📅 Semigap Scheduler</a>
+            <a class="navbar-brand" href="{{ url('/') }}">
+                <i class="bi bi-calendar3"></i> Semigap Scheduler
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('lectures.index') }}">Kuliah</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('utbk-sessions.index') }}">UTBK</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('lectures.index') }}">
+                            <i class="bi bi-mortarboard"></i> Kuliah
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('utbk-sessions.index') }}">
+                            <i class="bi bi-book-half"></i> UTBK
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container content-wrapper">
+    <!-- Content -->
+    <div class="container content-wrapper mt-4">
         @yield('content')
     </div>
 
